@@ -1,5 +1,15 @@
+/* eslint-disable */
 import { defineComponent, inject } from 'vue';
-import { ElForm, ElFormItem, ElButton, ElInputNumber } from 'element-plus';
+import {
+  ElForm,
+  ElFormItem,
+  ElButton,
+  ElInputNumber,
+  ElInput,
+  ElOption,
+  ElSelect,
+  ElColorPicker,
+} from 'element-plus';
 export default defineComponent({
   props: {
     block: { type: Object },
@@ -23,7 +33,32 @@ export default defineComponent({
       } else {
         let component = config.componentMap[props.block.type];
         if (component && component.props) {
-          console.log(component.props);
+          content.push(
+            Object.entries(component.props).map(([propName, propConfig]) => {
+              console.log('type = ' + propConfig.type);
+
+              return (
+                <ElFormItem label={propConfig.label}>
+                  {{
+                    input: () => <ElInput />,
+                    color: () => <ElColorPicker />,
+                    select: () => (
+                      <ElSelect>
+                        {propConfig.options.map((opt) => {
+                          return (
+                            <ElOption
+                              label={opt.label}
+                              value={opt.value}
+                            ></ElOption>
+                          );
+                        })}
+                      </ElSelect>
+                    ),
+                  }[propConfig.type]()}
+                </ElFormItem>
+              );
+            })
+          );
         }
       }
       return (

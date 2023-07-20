@@ -116,7 +116,10 @@ export default defineComponent({
           })}
         </div>
         <div class="editor-right">
-          <EditorOperator data={data.value}></EditorOperator>
+          <EditorOperator
+            block={lastSelectBlock.value}
+            data={data.value}
+          ></EditorOperator>
         </div>
         <div class="editor-container">
           <div class="editor-container-canvas">
