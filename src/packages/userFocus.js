@@ -1,7 +1,6 @@
 import { computed } from 'vue';
 export function useFocus(data) {
   const clearBlockFocus = () => {
-    console.log('clear');
     data.value.blocks.forEach((block) => (block.focus = false));
   };
   const blockMouseDown = (e, block) => {

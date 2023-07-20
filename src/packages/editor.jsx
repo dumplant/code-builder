@@ -40,7 +40,7 @@ export default defineComponent({
     const containerRef = ref(null);
 
     const { dragstart, dragend } = useMenuDragger(containerRef, data);
-
+    let { mousedown } = userBlockDragger();
     let { blockMouseDown, clearBlockFocus, focusData } = useFocus(data);
 
     const { commands } = useCommand();
