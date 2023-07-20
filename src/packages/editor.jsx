@@ -143,6 +143,7 @@ export default defineComponent({
               class="editor-container-canvas__content"
               style="width: 900px;height: 650px"
               ref={containerRef}
+              onMousedown={() => clearBlockFocus()}
             >
               {data.value.blocks.map((block) => (
                 <EditorBlock
