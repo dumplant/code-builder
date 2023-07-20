@@ -9,6 +9,7 @@ import { useCommand } from './useCommnad';
 import { $dialog } from '@/components/Dialog';
 import getResponse from './GetResponse';
 import { getJson } from './GetJson';
+import { useFocus } from './userFocus';
 export default defineComponent({
   components: {
     EditorBlock,
@@ -37,33 +38,11 @@ export default defineComponent({
       height: '800px',
     };
     const containerRef = ref(null);
-    const clearBlockFocus = () => {
-      data.value.blocks.forEach((block) => (block.focus = false));
-    };
-    const { dragstart, dragend } = useMenuDragger(containerRef, data);
-    const blockMouseDown = (e, block) => {
-      e.preventDefault();
-      e.stopPropagation();
-      // block上规划一个属性 focus， 获取焦点还将focus变为true
-      if (e.shiftKey) {
-        block.focus = !block.focus;
-      } else {
-        if (!block.focus) {
-          clearBlockFocus();
-          block.focus = true;
-        } else {
-          block.focus = false;
-        }
-      }
-    };
 
-    const focusData = computed(() => {
-      let focus = [];
-      let unfocused = [];
-      data.value.blocks.forEach((block) =>
-        (block.focus ? focus : unfocused).push(blcok)
-      );
-    });
+    const { dragstart, dragend } = useMenuDragger(containerRef, data);
+
+    let { blockMouseDown, clearBlockFocus, focusData } = useFocus(data);
+
     const { commands } = useCommand();
 
     const buttons = [
