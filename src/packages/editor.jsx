@@ -10,6 +10,7 @@ import { $dialog } from '@/components/Dialog';
 import getResponse from './GetResponse';
 import { getJson } from './GetJson';
 import { useFocus } from './userFocus';
+import { userBlockDragger } from './useBlockDragger';
 export default defineComponent({
   components: {
     EditorBlock,
@@ -41,9 +42,10 @@ export default defineComponent({
 
     const { dragstart, dragend } = useMenuDragger(containerRef, data);
     let { mousedown } = userBlockDragger();
-    let { blockMouseDown, clearBlockFocus, focusData } = useFocus(data);
-
+    let { blockMouseDown, clearBlockFocus, focusData, lastSelectBlock } =
+      useFocus(data);
     const { commands } = useCommand();
+    console.log(lastSelectBlock);
 
     const buttons = [
       { label: '撤销', handler: () => commands.undo() },
@@ -124,11 +126,11 @@ export default defineComponent({
               ref={containerRef}
               onMousedown={() => clearBlockFocus()}
             >
-              {data.value.blocks.map((block) => (
+              {data.value.blocks.map((block, index) => (
                 <EditorBlock
                   class={block.focus ? 'editor-block-focus' : ''}
                   block={block}
-                  onMousedown={(e) => blockMouseDown(e, block)}
+                  onMousedown={(e) => blockMouseDown(e, block, index)}
                 ></EditorBlock>
               ))}
             </div>

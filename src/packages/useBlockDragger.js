@@ -1,3 +1,4 @@
+/* eslint-disable */
 export function userBlockDragger() {
   const mousemove = (e) => {};
   const mouseup = (e) => {
