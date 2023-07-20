@@ -23,7 +23,11 @@ const createSelectProp = (label, options) => ({
 registerConfig.register({
   label: '文本',
   preview: () => '预览文本',
-  render: () => '渲染文本',
+  render: ({ props }) => (
+    <span style={{ color: props.color, fontSize: props.size }}>
+      {props.text || '渲染文本'}
+    </span>
+  ),
   type: 'text',
   props: {
     text: createInputProp('文本内容'),
@@ -40,21 +44,25 @@ registerConfig.register({
 registerConfig.register({
   label: '按钮',
   preview: () => <ElButton>预览按钮</ElButton>,
-  render: () => <ElButton>渲染按钮</ElButton>,
+  render: ({ props }) => (
+    <el-button type={props.type} size={props.size}>
+      {props.text || '渲染按钮'}
+    </el-button>
+  ),
   type: 'button',
   props: {
     text: createInputProp('按钮内容'),
-    mode: createSelectProp('按钮类型', [
-      { label: '基础', value: '14px' },
-      { label: '警告', value: '16px' },
-      { label: '成功', value: '18px' },
-      { label: '危险', value: '20px' },
+    type: createSelectProp('按钮类型', [
+      { label: '基础', value: 'primary' },
+      { label: '成功', value: 'success' },
+      { label: '警告', value: 'warning' },
+      { label: '危险', value: 'danger' },
+      { label: '文本', value: 'text' },
     ]),
-    size: createSelectProp('按钮大小', [
-      { label: '默认', value: '14px' },
-      { label: '中等', value: '16px' },
-      { label: '小', value: '18px' },
-      { label: '极小', value: '20px' },
+    size: createSelectProp('按钮尺寸', [
+      { label: '默认', value: 'default' },
+      { label: '大', value: 'large' },
+      { label: '小', value: 'small' },
     ]),
   },
 });
@@ -66,8 +74,8 @@ registerConfig.register({
       <el-input />
     </el-form-item>
   ),
-  render: () => (
-    <el-form-item label="输入框">
+  render: ({ props }) => (
+    <el-form-item label={props.text || '输入框'}>
       <el-input />
     </el-form-item>
   ),

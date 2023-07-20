@@ -15,7 +15,9 @@ export default defineComponent({
 
     return () => {
       const component = config.componentMap[props.block.type];
-      const renderComponent = component.render();
+      const renderComponent = component.render({
+        props: props.block.props,
+      });
       return <div class="editor-block">{renderComponent}</div>;
       // return <div class="editor-block" style={blockStyles.value}>
       //   {renderComponent}

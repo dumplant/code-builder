@@ -1,5 +1,6 @@
 /* eslint-disable */
-import { defineComponent, inject } from 'vue';
+import { defineComponent, inject, reactive, watch } from 'vue';
+import deepcopy from 'deepcopy';
 import {
   ElForm,
   ElFormItem,
@@ -17,6 +18,19 @@ export default defineComponent({
   },
   setup(props) {
     const config = inject('config');
+    const state = reactive({
+      editData: {},
+    });
+    const reset = () => {
+      if (!props.block) {
+        // 说明要绑定的是容器宽高
+        // state.editData = deepcopy(props.data.container);
+      } else {
+        state.editData = deepcopy(props.block);
+      }
+    };
+    watch(() => props.block, reset, { immediate: true });
+
     return () => {
       let content = [];
       if (!props.block) {
@@ -40,10 +54,14 @@ export default defineComponent({
               return (
                 <ElFormItem label={propConfig.label}>
                   {{
-                    input: () => <ElInput />,
-                    color: () => <ElColorPicker />,
+                    input: () => (
+                      <ElInput v-model={state.editData.props[propName]} />
+                    ),
+                    color: () => (
+                      <ElColorPicker v-model={state.editData.props[propName]} />
+                    ),
                     select: () => (
-                      <ElSelect>
+                      <ElSelect v-model={state.editData.props[propName]}>
                         {propConfig.options.map((opt) => {
                           return (
                             <ElOption

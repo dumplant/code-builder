@@ -18,6 +18,7 @@ export function useMenuDragger(containerRef, data) {
         ...blocks,
         {
           type: currentComponent.type,
+          props: {},
         },
       ],
     };
