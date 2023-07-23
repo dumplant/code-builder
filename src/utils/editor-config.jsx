@@ -76,10 +76,26 @@ registerConfig.register({
   ),
   render: ({ props }) => (
     <el-form-item label={props.text || '输入框'}>
-      <el-input />
+      <el-input
+        style={
+          props.size === 'small'
+            ? 'width:30%'
+            : props.size === 'medium'
+            ? 'width:60%'
+            : ''
+        }
+      />
     </el-form-item>
   ),
   type: 'input',
+  props: {
+    text: createInputProp('标签内容'),
+    size: createSelectProp('输入框尺寸', [
+      { label: '大', value: 'big' },
+      { label: '中', value: 'medium' },
+      { label: '小', value: 'small' },
+    ]),
+  },
 });
 
 registerConfig.register({

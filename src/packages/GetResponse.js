@@ -21,7 +21,7 @@ const getResponse = async (current_data, user_prompt) => {
         role: 'user',
         content: `使用json来描述一个页面的例子如下：
 \`\`\`JSON
-{ "blocks": [ { "type": "input", "props": { "text": "姓名" } }, { "type": "input", "props": { "text": "年龄" } }, { "type": "button", "props": { "type": "primary", "text": "提交" } } ] }
+{ "blocks": [ { "type": "input", "props": { "text": "姓名","size":"small" } }, { "type": "input", "props": { "text": "年龄","size":"small" } }, { "type": "button", "props": { "type": "primary", "text": "提交" } } ] }
 \`\`\`
 重点注意：除了我给出的键值，你不能自作主张使用和增加任何类型的键值。
 
