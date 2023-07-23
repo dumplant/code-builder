@@ -77,14 +77,14 @@
     box-sizing: border-box;
     padding: 80px 270px 0;
     height: 100vh;
-    background-color: rgb(54, 54, 54);
+    background-color: white;
 
     &-canvas {
       overflow: scroll;
       height: 100%;
 
       &__content {
-        background-color: #fff;
+        background-color: #e7e7e7;
         margin: 20px auto;
         position: relative;
         padding: 10px;

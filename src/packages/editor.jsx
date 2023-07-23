@@ -44,7 +44,7 @@ export default defineComponent({
     let { mousedown } = userBlockDragger();
     let { blockMouseDown, clearBlockFocus, focusData, lastSelectBlock } =
       useFocus(data);
-    const { commands } = useCommand();
+    const { commands } = useCommand(data);
     console.log(lastSelectBlock);
 
     const buttons = [
@@ -84,6 +84,7 @@ export default defineComponent({
               console.log(text);
               let res = await getResponse(JSON.stringify(data.value), text);
               let generateJson = getJson(res);
+              console.log(generateJson);
               data.value = JSON.parse(generateJson);
             },
           });

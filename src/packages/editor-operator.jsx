@@ -29,6 +29,14 @@ export default defineComponent({
         state.editData = deepcopy(props.block);
       }
     };
+    const apply = () => {
+      if (!props.block) {
+        // 更改容器
+      } else {
+        // 更改组件
+        state.editData = deepcopy(props.block);
+      }
+    };
     watch(() => props.block, reset, { immediate: true });
 
     return () => {
@@ -83,8 +91,10 @@ export default defineComponent({
         <ElForm labelPosition="top" style="padding:30px">
           {content}
           <ElFormItem>
-            <ElButton type="primary">应用</ElButton>
-            <ElButton>重置</ElButton>
+            <ElButton type="primary" onClick={() => apply()}>
+              应用
+            </ElButton>
+            <ElButton onClick={reset}>重置</ElButton>
           </ElFormItem>
         </ElForm>
       );
