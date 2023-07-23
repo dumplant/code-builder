@@ -120,6 +120,7 @@ export default defineComponent({
           <EditorOperator
             block={lastSelectBlock.value}
             data={data.value}
+            updateBlock={commands.updateBlock}
           ></EditorOperator>
         </div>
         <div class="editor-container">

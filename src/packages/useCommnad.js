@@ -12,9 +12,9 @@ export function useCommand(data) {
   };
   const registry = (command) => {
     state.commandArray.push(command);
-    state.commands[command.name] = () => {
+    state.commands[command.name] = (...args) => {
       // 命令名字对应执行函数
-      const { redo, undo } = command.execute();
+      const { redo, undo } = command.execute(...args);
       redo();
       if (!command.pushQueue) {
         return;
@@ -95,6 +95,34 @@ export function useCommand(data) {
       };
     },
   });
+  registry({
+    // 更新某一个组件
+    name: 'updateBlock',
+    pushQueue: true,
+    execute(newBlock, oldBlock) {
+      let state = {
+        before: data.value.blocks,
+        after: (() => {
+          console.log('newBlock' + newBlock);
+
+          console.log('oldBlock' + oldBlock);
+          let blocks = [...data.value.blocks]; // 拷贝一份用于新block
+          const index = data.value.blocks.indexOf(oldBlock); // 找到老的位置
+          if (index > -1) blocks.splice(index, 1, newBlock);
+          return blocks;
+        })(),
+      };
+      return {
+        redo: () => {
+          data.value = { ...data.value, blocks: state.after };
+        },
+        undo: () => {
+          data.value = { ...data.value, blocks: state.before };
+        },
+      };
+    },
+  });
+
   const keyboardEvent = (() => {
     const keyCodes = {
       90: 'z',

@@ -15,6 +15,7 @@ export default defineComponent({
   props: {
     block: { type: Object },
     data: { type: Object },
+    updateBlock: { type: Function },
   },
   setup(props) {
     const config = inject('config');
@@ -34,7 +35,8 @@ export default defineComponent({
         // 更改容器
       } else {
         // 更改组件
-        state.editData = deepcopy(props.block);
+        console.log(state.editData, props.block);
+        props.updateBlock(state.editData, props.block);
       }
     };
     watch(() => props.block, reset, { immediate: true });
