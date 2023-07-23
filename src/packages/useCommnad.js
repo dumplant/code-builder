@@ -95,8 +95,40 @@ export function useCommand(data) {
       };
     },
   });
+  const keyboardEvent = (() => {
+    const keyCodes = {
+      90: 'z',
+      89: 'y',
+    };
+    const onKeydown = (e) => {
+      const { ctrlKey, keyCode } = e;
+      let keyString = [];
+      if (ctrlKey) keyString.push('ctrl');
+      keyString.push(keyCodes[keyCode]);
+      keyString = keyString.join('+');
+
+      state.commandArray.forEach(({ shortcut, name }) => {
+        if (!shortcut) return; // 没有快捷键
+        if (shortcut === keyString) {
+          state.commands[name]();
+          e.preventDefault();
+        }
+      });
+    };
+
+    const init = () => {
+      // 初始化事件
+      window.addEventListener('keydown', onKeydown);
+      return () => {
+        // 销毁事件
+        window.removeEventListener('keydown', onKeydown);
+      };
+    };
+    return init;
+  })();
 
   (() => {
+    state.destroyArray.push(keyboardEvent());
     state.commandArray.forEach(
       (cmd) => cmd.init && state.destroyArray.push(cmd.init())
     );
