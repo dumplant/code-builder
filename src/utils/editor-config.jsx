@@ -99,6 +99,40 @@ registerConfig.register({
 });
 
 registerConfig.register({
+  label: '单选框',
+  preview: () => (
+    <el-radio-group>
+      <el-radio label="1" size="large">
+        Option 1
+      </el-radio>
+      <el-radio label="2" size="large">
+        Option 2
+      </el-radio>
+    </el-radio-group>
+  ),
+  render: ({ props }) => {
+    if (props.options) {
+      console.log(props.options);
+      return (
+        <el-radio-group>
+          {props.options.map((opt) => (
+            <el-radio label={opt.label}>{opt.value}</el-radio>
+          ))}
+        </el-radio-group>
+      );
+    } else {
+      return (
+        <el-radio-group>
+          <el-radio label="1">Option 1</el-radio>
+          <el-radio label="2">Option 2</el-radio>
+        </el-radio-group>
+      );
+    }
+  },
+  type: 'radio',
+});
+
+registerConfig.register({
   label: '表格',
   preview: () => (
     <el-table style="width: 250px">
