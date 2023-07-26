@@ -1,4 +1,11 @@
-import { ElOption, ElSelect, ElRadioGroup, ElRadio } from 'element-plus';
+import {
+  ElOption,
+  ElSelect,
+  ElRadioGroup,
+  ElRadio,
+  ElCheckboxGroup,
+  ElCheckbox,
+} from 'element-plus';
 
 function createEditorConfig() {
   const componentList = [];
@@ -144,6 +151,37 @@ registerConfig.register({
         { label: '显示值', field: 'value' },
         { label: '绑定值', field: 'label' },
       ],
+      label: 'label',
+    }),
+  },
+});
+
+registerConfig.register({
+  label: '多选框',
+  preview: () => (
+    <ElCheckboxGroup>
+      <ElCheckbox label="Option 1" size="large"></ElCheckbox>
+      <ElCheckbox label="Option 2" size="large"></ElCheckbox>
+    </ElCheckboxGroup>
+  ),
+  render: ({ props, model }) => {
+    return (
+      <ElCheckboxGroup {...model.default}>
+        {(props.options || [{ label: 'Option 1' }, { label: 'Option 2' }]).map(
+          (item) => {
+            return <ElCheckbox label={item.label}></ElCheckbox>;
+          }
+        )}
+      </ElCheckboxGroup>
+    );
+  },
+  type: 'checkbox',
+  model: {
+    default: '绑定字段',
+  },
+  props: {
+    options: createTableProp('多选选项', {
+      options: [{ label: '显示值', field: 'label' }],
       label: 'label',
     }),
   },
