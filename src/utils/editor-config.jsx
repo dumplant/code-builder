@@ -1,4 +1,4 @@
-import { ElSelect } from 'element-plus';
+import { ElOption, ElSelect } from 'element-plus';
 
 function createEditorConfig() {
   const componentList = [];
@@ -145,7 +145,21 @@ registerConfig.register({
 registerConfig.register({
   label: '下拉框',
   preview: () => <ElSelect modelValue=""></ElSelect>,
-  render: () => <ElSelect></ElSelect>,
+  render: ({ props, model }) => {
+    return (
+      <ElSelect {...model.default}>
+        {(props.options || []).map((opt, index) => {
+          return (
+            <ElOption
+              label={opt.label}
+              value={opt.value}
+              key={index}
+            ></ElOption>
+          );
+        })}
+      </ElSelect>
+    );
+  },
   type: 'select',
   props: {
     options: createTableProp('下拉选项', {
@@ -155,6 +169,9 @@ registerConfig.register({
       ],
       label: 'label',
     }),
+  },
+  model: {
+    default: '绑定字段',
   },
 });
 registerConfig.register({
