@@ -1,4 +1,4 @@
-import { ElOption, ElSelect } from 'element-plus';
+import { ElOption, ElSelect, ElRadioGroup, ElRadio } from 'element-plus';
 
 function createEditorConfig() {
   const componentList = [];
@@ -111,35 +111,42 @@ registerConfig.register({
 registerConfig.register({
   label: '单选框',
   preview: () => (
-    <el-radio-group>
-      <el-radio label="1" size="large">
+    <ElRadioGroup>
+      <ElRadio label="1" size="large">
         Option 1
-      </el-radio>
-      <el-radio label="2" size="large">
+      </ElRadio>
+      <ElRadio label="2" size="large">
         Option 2
-      </el-radio>
-    </el-radio-group>
+      </ElRadio>
+    </ElRadioGroup>
   ),
-  render: ({ props }) => {
-    if (props.options) {
-      console.log(props.options);
-      return (
-        <el-radio-group>
-          {props.options.map((opt) => (
-            <el-radio label={opt.label}>{opt.value}</el-radio>
-          ))}
-        </el-radio-group>
-      );
-    } else {
-      return (
-        <el-radio-group>
-          <el-radio label="1">Option 1</el-radio>
-          <el-radio label="2">Option 2</el-radio>
-        </el-radio-group>
-      );
-    }
+  render: ({ props, model }) => {
+    return (
+      <ElRadioGroup {...model.default}>
+        {(
+          props.options || [
+            { label: 1, value: 'Option 1' },
+            { label: 2, value: 'Option 2' },
+          ]
+        ).map((item) => {
+          return <ElRadio label={item.label}>{item.value}</ElRadio>;
+        })}
+      </ElRadioGroup>
+    );
   },
   type: 'radio',
+  model: {
+    default: '绑定字段',
+  },
+  props: {
+    options: createTableProp('单选选项', {
+      options: [
+        { label: '显示值', field: 'value' },
+        { label: '绑定值', field: 'label' },
+      ],
+      label: 'label',
+    }),
+  },
 });
 
 registerConfig.register({
