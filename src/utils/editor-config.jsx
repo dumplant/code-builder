@@ -80,9 +80,10 @@ registerConfig.register({
       <el-input />
     </el-form-item>
   ),
-  render: ({ props }) => (
+  render: ({ props, model }) => (
     <el-form-item label={props.text || '输入框'}>
       <el-input
+        {...model.default}
         style={
           props.size === 'small'
             ? 'width:30%'
@@ -101,6 +102,9 @@ registerConfig.register({
       { label: '中', value: 'medium' },
       { label: '小', value: 'small' },
     ]),
+  },
+  model: {
+    default: '绑定字段',
   },
 });
 

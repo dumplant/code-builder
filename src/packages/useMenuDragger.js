@@ -21,6 +21,7 @@ export function useMenuDragger(containerRef, data) {
         {
           type: currentComponent.type,
           props: {},
+          model: {},
         },
       ],
     };

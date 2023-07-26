@@ -18,6 +18,7 @@ export default defineComponent({
   },
   props: {
     modelValue: { type: Object },
+    formData: { type: Object },
   },
   emits: ['update:modelValue'],
   setup(props, ctx) {
@@ -127,6 +128,7 @@ export default defineComponent({
               <EditorBlock
                 class={'editor-block-preview'}
                 block={block}
+                formData={props.formData}
               ></EditorBlock>
             ))}
           </div>
@@ -182,6 +184,7 @@ export default defineComponent({
                         : ''
                     }
                     block={block}
+                    formData={props.formData}
                     onMousedown={(e) => blockMouseDown(e, block, index)}
                   ></EditorBlock>
                 ))}
