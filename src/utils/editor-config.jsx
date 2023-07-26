@@ -1,3 +1,5 @@
+import { ElSelect } from 'element-plus';
+
 function createEditorConfig() {
   const componentList = [];
   const componentMap = {};
@@ -19,7 +21,11 @@ const createSelectProp = (label, options) => ({
   label,
   options,
 });
-
+const createTableProp = (label, table) => ({
+  type: 'table',
+  label,
+  table,
+});
 registerConfig.register({
   label: '文本',
   preview: () => '预览文本',
@@ -133,9 +139,24 @@ registerConfig.register({
 });
 
 registerConfig.register({
+  label: '下拉框',
+  preview: () => <ElSelect modelValue=""></ElSelect>,
+  render: () => <ElSelect></ElSelect>,
+  type: 'select',
+  props: {
+    options: createTableProp('下拉选项', {
+      options: [
+        { label: '显示值(label)', field: 'label' },
+        { label: '绑定值(value)', field: 'value' },
+      ],
+      label: 'label',
+    }),
+  },
+});
+registerConfig.register({
   label: '表格',
   preview: () => (
-    <el-table style="width: 250px">
+    <el-table>
       <el-table-column prop="date" label="Date" width="180" />
       <el-table-column prop="name" label="Name" width="180" />
       <el-table-column prop="address" label="Address" />
