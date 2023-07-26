@@ -11,6 +11,7 @@ import {
   ElSelect,
   ElColorPicker,
 } from 'element-plus';
+import TableEditor from './table-editor';
 export default defineComponent({
   props: {
     block: { type: Object },
@@ -34,8 +35,6 @@ export default defineComponent({
       if (!props.block) {
         // 更改容器
       } else {
-        // 更改组件
-        console.log(state.editData, props.block);
         props.updateBlock(state.editData, props.block);
       }
     };
@@ -81,6 +80,12 @@ export default defineComponent({
                           );
                         })}
                       </ElSelect>
+                    ),
+                    table: () => (
+                      <TableEditor
+                        propConfig={propConfig}
+                        v-model={state.editData.props[propName]}
+                      ></TableEditor>
                     ),
                   }[propConfig.type]()}
                 </ElFormItem>
