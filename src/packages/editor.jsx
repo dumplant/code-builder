@@ -44,7 +44,7 @@ export default defineComponent({
     let { mousedown } = userBlockDragger();
     let { blockMouseDown, clearBlockFocus, focusData, lastSelectBlock } =
       useFocus(data);
-    const { commands } = useCommand(data);
+    const { commands } = useCommand(data, focusData);
     console.log(lastSelectBlock);
 
     const buttons = [
@@ -90,6 +90,7 @@ export default defineComponent({
           });
         },
       },
+      { label: '删除', handler: () => commands.delete() },
     ];
 
     return () => (

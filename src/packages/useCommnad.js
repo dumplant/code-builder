@@ -2,7 +2,7 @@ import deepcopy from 'deepcopy';
 import { onUnmounted } from 'vue';
 import { events } from './events';
 
-export function useCommand(data) {
+export function useCommand(data, focusData) {
   const state = {
     current: -1,
     queue: [], // 存放所有操作命令
@@ -122,7 +122,25 @@ export function useCommand(data) {
       };
     },
   });
+  registry({
+    name: 'delete',
+    pushQueue: true, // 是否可以加入命令队列
+    execute() {
+      let state = {
+        before: deepcopy(data.value.blocks),
+        after: focusData.value.unfocused,
+      };
 
+      return {
+        redo() {
+          data.value = { ...data.value, blocks: state.after }; //存储当前的状态
+        },
+        undo() {
+          data.value = { ...data.value, blocks: state.before }; // 存储之前的状态
+        },
+      };
+    },
+  });
   const keyboardEvent = (() => {
     const keyCodes = {
       90: 'z',
