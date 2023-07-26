@@ -11,6 +11,7 @@ import getResponse from './GetResponse';
 import { getJson } from './GetJson';
 import { useFocus } from './userFocus';
 import { userBlockDragger } from './useBlockDragger';
+import { ElButton } from 'element-plus';
 export default defineComponent({
   components: {
     EditorBlock,
@@ -21,6 +22,7 @@ export default defineComponent({
   emits: ['update:modelValue'],
   setup(props, ctx) {
     const previewRef = ref(false);
+    const editorRef = ref(true);
     const config = inject('config');
 
     const data = computed({
@@ -99,66 +101,93 @@ export default defineComponent({
           clearBlockFocus();
         },
       },
+      {
+        label: () => '关闭',
+        handler: () => {
+          editorRef.value = false;
+          clearBlockFocus();
+        },
+      },
     ];
 
-    return () => (
-      <div class="editor">
-        <div class="editor-left">
-          {config.componentList.map((component) => (
-            <div
-              class="editor-left-item"
-              draggable
-              onDragstart={(e) => dragstart(e, component)}
-              onDragend={dragend}
-            >
-              <span>{component.label}</span>
-              <div>{component.preview()}</div>
-            </div>
-          ))}
-        </div>
-        <div class="editor-top">
-          {buttons.map((btn, index) => {
-            const label =
-              typeof btn.label == 'function' ? btn.label() : btn.label;
-            return (
-              <div class="editor-top-button" onClick={btn.handler}>
-                <el-button>{label}</el-button>
+    return () =>
+      !editorRef.value ? (
+        <>
+          <div style={'float:right'}>
+            <ElButton type="primary" onClick={() => (editorRef.value = true)}>
+              返回编辑
+            </ElButton>
+          </div>
+          <div
+            class="editor-container-canvas__content"
+            style="width: 900px;height: 650px; margin:0"
+          >
+            {data.value.blocks.map((block, index) => (
+              <EditorBlock
+                class={'editor-block-preview'}
+                block={block}
+              ></EditorBlock>
+            ))}
+          </div>
+        </>
+      ) : (
+        <div class="editor">
+          <div class="editor-left">
+            {config.componentList.map((component) => (
+              <div
+                class="editor-left-item"
+                draggable
+                onDragstart={(e) => dragstart(e, component)}
+                onDragend={dragend}
+              >
+                <span>{component.label}</span>
+                <div>{component.preview()}</div>
               </div>
-            );
-          })}
-        </div>
-        <div class="editor-right">
-          <EditorOperator
-            block={lastSelectBlock.value}
-            data={data.value}
-            updateBlock={commands.updateBlock}
-          ></EditorOperator>
-        </div>
-        <div class="editor-container">
-          <div class="editor-container-canvas">
-            <div
-              class="editor-container-canvas__content"
-              style="width: 900px;height: 650px"
-              ref={containerRef}
-              onMousedown={() => clearBlockFocus()}
-            >
-              {data.value.blocks.map((block, index) => (
-                <EditorBlock
-                  class={
-                    block.focus
-                      ? 'editor-block-focus'
-                      : previewRef.value
-                      ? 'editor-block-preview'
-                      : ''
-                  }
-                  block={block}
-                  onMousedown={(e) => blockMouseDown(e, block, index)}
-                ></EditorBlock>
-              ))}
+            ))}
+          </div>
+          <div class="editor-top">
+            {buttons.map((btn, index) => {
+              const label =
+                typeof btn.label == 'function' ? btn.label() : btn.label;
+              return (
+                <div class="editor-top-button" onClick={btn.handler}>
+                  <el-button>{label}</el-button>
+                </div>
+              );
+            })}
+          </div>
+          <div class="editor-right">
+            <EditorOperator
+              block={lastSelectBlock.value}
+              data={data.value}
+              updateBlock={commands.updateBlock}
+            ></EditorOperator>
+          </div>
+          <div class="editor-container">
+            <div class="editor-container-canvas">
+              <div
+                class="editor-container-canvas__content"
+                style="width: 900px;height: 650px"
+                ref={containerRef}
+                onMousedown={() => clearBlockFocus()}
+              >
+                {data.value.blocks.map((block, index) => (
+                  <EditorBlock
+                    class={
+                      block.focus
+                        ? 'editor-block-focus'
+                        : previewRef.value
+                        ? 'editor-block-preview'
+                        : ''
+                    }
+                    block={block}
+                    onMousedown={(e) => blockMouseDown(e, block, index)}
+                  ></EditorBlock>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    );
+      );
   },
 });
