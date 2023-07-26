@@ -61,7 +61,8 @@ export default defineComponent({
             content: '',
             footer: true,
             onConfirm(text) {
-              data.value = JSON.parse(text);
+              // data.value = JSON.parse(text);
+              commands.updateContainer(JSON.parse(text));
             },
           });
         },
@@ -88,7 +89,7 @@ export default defineComponent({
               let res = await getResponse(JSON.stringify(data.value), text);
               let generateJson = getJson(res);
               console.log(generateJson);
-              data.value = JSON.parse(generateJson);
+              commands.updateContainer(JSON.parse(generateJson));
             },
           });
         },

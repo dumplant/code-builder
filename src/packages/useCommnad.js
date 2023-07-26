@@ -96,6 +96,24 @@ export function useCommand(data, focusData) {
     },
   });
   registry({
+    name: 'updateContainer',
+    pushQueue: true,
+    execute(newValue) {
+      let state = {
+        before: data.value,
+        after: newValue,
+      };
+      return {
+        redo: () => {
+          data.value = state.after;
+        },
+        undo: () => {
+          data.value = state.before;
+        },
+      };
+    },
+  });
+  registry({
     // 更新某一个组件
     name: 'updateBlock',
     pushQueue: true,
