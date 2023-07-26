@@ -111,9 +111,11 @@
 
   .editor-block-focus {
     outline: 1px dashed red;
-
-
-
   }
 
+  .editor-block-preview {
+    &::after {
+      display: none;
+    }
+  }
 }

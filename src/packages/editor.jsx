@@ -20,6 +20,7 @@ export default defineComponent({
   },
   emits: ['update:modelValue'],
   setup(props, ctx) {
+    const previewRef = ref(false);
     const config = inject('config');
 
     const data = computed({
@@ -43,7 +44,7 @@ export default defineComponent({
     const { dragstart, dragend } = useMenuDragger(containerRef, data);
     let { mousedown } = userBlockDragger();
     let { blockMouseDown, clearBlockFocus, focusData, lastSelectBlock } =
-      useFocus(data);
+      useFocus(data, previewRef);
     const { commands } = useCommand(data, focusData);
     console.log(lastSelectBlock);
 
@@ -91,6 +92,13 @@ export default defineComponent({
         },
       },
       { label: '删除', handler: () => commands.delete() },
+      {
+        label: () => (previewRef.value ? '编辑' : '预览'),
+        handler: () => {
+          previewRef.value = !previewRef.value;
+          clearBlockFocus();
+        },
+      },
     ];
 
     return () => (
@@ -110,9 +118,11 @@ export default defineComponent({
         </div>
         <div class="editor-top">
           {buttons.map((btn, index) => {
+            const label =
+              typeof btn.label == 'function' ? btn.label() : btn.label;
             return (
               <div class="editor-top-button" onClick={btn.handler}>
-                <el-button>{btn.label}</el-button>
+                <el-button>{label}</el-button>
               </div>
             );
           })}
@@ -134,7 +144,13 @@ export default defineComponent({
             >
               {data.value.blocks.map((block, index) => (
                 <EditorBlock
-                  class={block.focus ? 'editor-block-focus' : ''}
+                  class={
+                    block.focus
+                      ? 'editor-block-focus'
+                      : previewRef.value
+                      ? 'editor-block-preview'
+                      : ''
+                  }
                   block={block}
                   onMousedown={(e) => blockMouseDown(e, block, index)}
                 ></EditorBlock>
