@@ -73,7 +73,14 @@ export default defineComponent({
         handler: () => {
           $dialog({
             title: '导出JSON',
-            content: JSON.stringify(data.value),
+            content: JSON.stringify(
+              data.value.blocks.map((block) => {
+                if ('focus' in block) {
+                  delete block.focus;
+                }
+                return block;
+              })
+            ),
             footer: false,
           });
         },
