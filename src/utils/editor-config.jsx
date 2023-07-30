@@ -129,16 +129,18 @@ registerConfig.register({
   ),
   render: ({ props, model }) => {
     return (
-      <ElRadioGroup {...model.default}>
-        {(
-          props.options || [
-            { label: 1, value: 'Option 1' },
-            { label: 2, value: 'Option 2' },
-          ]
-        ).map((item) => {
-          return <ElRadio label={item.label}>{item.value}</ElRadio>;
-        })}
-      </ElRadioGroup>
+      <el-form-item label={props.text || '单选框'}>
+        <ElRadioGroup {...model.default}>
+          {(
+            props.options || [
+              { label: 1, value: 'Option 1' },
+              { label: 2, value: 'Option 2' },
+            ]
+          ).map((item) => {
+            return <ElRadio label={item.label}>{item.value}</ElRadio>;
+          })}
+        </ElRadioGroup>
+      </el-form-item>
     );
   },
   type: 'radio',
@@ -146,6 +148,7 @@ registerConfig.register({
     default: '绑定字段',
   },
   props: {
+    text: createInputProp('标签内容'),
     options: createTableProp('单选选项', {
       options: [
         { label: '显示值', field: 'value' },
@@ -166,13 +169,15 @@ registerConfig.register({
   ),
   render: ({ props, model }) => {
     return (
-      <ElCheckboxGroup {...model.default}>
-        {(props.options || [{ label: 'Option 1' }, { label: 'Option 2' }]).map(
-          (item) => {
+      <el-form-item label={props.text || '多选框'}>
+        <ElCheckboxGroup {...model.default}>
+          {(
+            props.options || [{ label: 'Option 1' }, { label: 'Option 2' }]
+          ).map((item) => {
             return <ElCheckbox label={item.label}></ElCheckbox>;
-          }
-        )}
-      </ElCheckboxGroup>
+          })}
+        </ElCheckboxGroup>
+      </el-form-item>
     );
   },
   type: 'checkbox',
@@ -180,6 +185,7 @@ registerConfig.register({
     default: '绑定字段',
   },
   props: {
+    text: createInputProp('标签内容'),
     options: createTableProp('多选选项', {
       options: [{ label: '显示值', field: 'label' }],
       label: 'label',
@@ -192,21 +198,24 @@ registerConfig.register({
   preview: () => <ElSelect modelValue=""></ElSelect>,
   render: ({ props, model }) => {
     return (
-      <ElSelect {...model.default}>
-        {(props.options || []).map((opt, index) => {
-          return (
-            <ElOption
-              label={opt.label}
-              value={opt.value}
-              key={index}
-            ></ElOption>
-          );
-        })}
-      </ElSelect>
+      <el-form-item label={props.text || '下拉框'}>
+        <ElSelect {...model.default}>
+          {(props.options || []).map((opt, index) => {
+            return (
+              <ElOption
+                label={opt.label}
+                value={opt.value}
+                key={index}
+              ></ElOption>
+            );
+          })}
+        </ElSelect>
+      </el-form-item>
     );
   },
   type: 'select',
   props: {
+    text: createInputProp('标签内容'),
     options: createTableProp('下拉选项', {
       options: [
         { label: '显示值(label)', field: 'label' },
