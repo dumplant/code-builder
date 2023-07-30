@@ -21,7 +21,7 @@ const getResponse = async (current_data, user_prompt) => {
         role: 'user',
         content: `使用json来描述一个页面的例子如下：
 \`\`\`JSON
-{ "blocks": [ { "type": "input", "props": { "text": "姓名","size":"small" } }, { "type": "input", "props": { "text": "年龄","size":"small" } }, { "type": "button", "props": { "type": "primary", "text": "提交" } } ] }
+{"blocks":[{"type":"text","props":{"text":"我是标题文字"},"model":{}},{"type":"input","props":{"size":"small","text":"姓名"},"model":{"default":"name"}},{"type":"radio","props":{"text":"性别","options":[{"value":"男","label":"male"},{"value":"女","label":"female"}]},"model":{"default":"gender"}},{"type":"checkbox","props":{"text":"兴趣","options":[{"label":"运动"},{"label":"看剧"},{"label":"绘画"},{"label":"其他"}]},"model":{"default":"hobby"}},{"type":"select","props":{"text":"所在地","options":[{"label":"北京","value":"beijing"},{"label":"上海","value":"shanghai"},{"label":"广州","value":"guangzhou"}]},"model":{"default":"location"}},{"type":"button","props":{"text":"提交","type":"primary"},"model":{}}]}
 \`\`\`
 重点注意：除了我给出的键值，你不能自作主张使用和增加任何类型的键值。
 
