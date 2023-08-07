@@ -12,6 +12,7 @@ import { getJson } from './GetJson';
 import { useFocus } from './userFocus';
 import { userBlockDragger } from './useBlockDragger';
 import { ElButton } from 'element-plus';
+import { $dropdown, DropdownItem } from '@/components/Dropdown';
 export default defineComponent({
   components: {
     EditorBlock,
@@ -119,6 +120,29 @@ export default defineComponent({
       },
     ];
 
+    const onContextMenuBlock = (e, block, index) => {
+      e.preventDefault();
+      $dropdown({
+        el: e.target,
+        content: () => (
+          <>
+            <DropdownItem
+              label="上移"
+              onClick={() => {
+                commands.up(block);
+              }}
+            ></DropdownItem>
+            <DropdownItem
+              label="下移"
+              onClick={() => {
+                commands.down(block);
+              }}
+            ></DropdownItem>
+          </>
+        ),
+      });
+    };
+
     return () =>
       !editorRef.value ? (
         <>
@@ -193,6 +217,7 @@ export default defineComponent({
                     block={block}
                     formData={props.formData}
                     onMousedown={(e) => blockMouseDown(e, block, index)}
+                    onContextmenu={(e) => onContextMenuBlock(e, block, index)}
                   ></EditorBlock>
                 ))}
               </div>
