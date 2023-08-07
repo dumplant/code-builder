@@ -141,6 +141,66 @@ export function useCommand(data, focusData) {
     },
   });
   registry({
+    // 上移某一个组件
+    name: 'up',
+    pushQueue: true,
+    execute(newBlock) {
+      let state = {
+        before: data.value.blocks,
+        after: (() => {
+          let blocks = [...data.value.blocks]; // 拷贝一份用于新block
+          const index = data.value.blocks.indexOf(newBlock); // 找到老的位置
+
+          if (index > 0) {
+            // 交换目标元素和前一个元素的位置
+            const temp = blocks[index];
+            blocks[index] = blocks[index - 1];
+            blocks[index - 1] = temp;
+          }
+          return blocks;
+        })(),
+      };
+      return {
+        redo: () => {
+          data.value = { ...data.value, blocks: state.after };
+        },
+        undo: () => {
+          data.value = { ...data.value, blocks: state.before };
+        },
+      };
+    },
+  });
+  registry({
+    // 下移某一个组件
+    name: 'down',
+    pushQueue: true,
+    execute(newBlock) {
+      let state = {
+        before: data.value.blocks,
+        after: (() => {
+          let blocks = [...data.value.blocks]; // 拷贝一份用于新block
+          const index = data.value.blocks.indexOf(newBlock); // 找到老的位置
+
+          if (index > -1 && index < blocks.length - 1) {
+            // 交换目标元素和前一个元素的位置
+            const temp = blocks[index];
+            blocks[index] = blocks[index + 1];
+            blocks[index + 1] = temp;
+          }
+          return blocks;
+        })(),
+      };
+      return {
+        redo: () => {
+          data.value = { ...data.value, blocks: state.after };
+        },
+        undo: () => {
+          data.value = { ...data.value, blocks: state.before };
+        },
+      };
+    },
+  });
+  registry({
     name: 'delete',
     pushQueue: true, // 是否可以加入命令队列
     execute() {
