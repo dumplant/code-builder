@@ -11,7 +11,7 @@ import getResponse from './GetResponse';
 import { getJson } from './GetJson';
 import { useFocus } from './userFocus';
 import { userBlockDragger } from './useBlockDragger';
-import { ElButton } from 'element-plus';
+import { ElButton, ElNotification } from 'element-plus';
 import { $dropdown, DropdownItem } from '@/components/Dropdown';
 export default defineComponent({
   components: {
@@ -35,14 +35,15 @@ export default defineComponent({
         ctx.emit('update:modelValue', deepcopy(newValue));
       },
     });
-    // const containerStyles = computed(() => ({
-    //   width: data.value.container.width + 'px',
-    //   height: data.value.container.height + 'px'
-    // }))
-    const containerStyles = {
-      width: '700px',
-      height: '800px',
-    };
+    const containerStyles = computed(() => ({
+      width: (data.value.container ? data.value.container.width : 800) + 'px',
+      height: (data.value.container ? data.value.container.height : 450) + 'px',
+    }));
+    console.log(containerStyles, containerStyles);
+    // const containerStyles = {
+    //   width: '700px',
+    //   height: '800px',
+    // };
     const containerRef = ref(null);
 
     const { dragstart, dragend } = useMenuDragger(containerRef, data);
@@ -63,7 +64,9 @@ export default defineComponent({
             content: '',
             footer: true,
             onConfirm(text) {
-              // data.value = JSON.parse(text);
+              // console.log('text', JSON.parse(text));
+              // data.value.blocks = JSON.parse(text);
+              // console.log('导入data.value', data.value);
               commands.updateContainer(JSON.parse(text));
             },
           });
@@ -75,12 +78,14 @@ export default defineComponent({
           $dialog({
             title: '导出JSON',
             content: JSON.stringify(
-              data.value.blocks.map((block) => {
-                if ('focus' in block) {
-                  delete block.focus;
-                }
-                return block;
-              })
+              (() => {
+                data.value.blocks.map((block) => {
+                  if ('focus' in block) {
+                    delete block.focus;
+                  }
+                });
+                return data.value;
+              })()
             ),
             footer: false,
           });
@@ -95,10 +100,19 @@ export default defineComponent({
             footer: true,
             async onConfirm(text) {
               console.log(text);
-              let res = await getResponse(JSON.stringify(data.value), text);
-              let generateJson = getJson(res);
-              console.log(generateJson);
-              commands.updateContainer(JSON.parse(generateJson));
+              try {
+                let res = await getResponse(JSON.stringify(data.value), text);
+                let generateJson = getJson(res);
+                commands.updateContainer(JSON.parse(generateJson));
+              } catch (error) {
+                (() => {
+                  ElNotification({
+                    title: 'Error',
+                    message: '发生错误请重试',
+                    type: 'error',
+                  });
+                })();
+              }
             },
           });
         },
@@ -153,7 +167,7 @@ export default defineComponent({
           </div>
           <div
             class="editor-container-canvas__content"
-            style="width: 900px;height: 650px; margin:0"
+            style={containerStyles.value}
           >
             {data.value.blocks.map((block, index) => (
               <EditorBlock
@@ -194,6 +208,7 @@ export default defineComponent({
             <EditorOperator
               block={lastSelectBlock.value}
               data={data.value}
+              updateContainer={commands.updateContainer}
               updateBlock={commands.updateBlock}
             ></EditorOperator>
           </div>
@@ -201,7 +216,7 @@ export default defineComponent({
             <div class="editor-container-canvas">
               <div
                 class="editor-container-canvas__content"
-                style="width: 900px;height: 650px"
+                style={containerStyles.value}
                 ref={containerRef}
                 onMousedown={() => clearBlockFocus()}
               >

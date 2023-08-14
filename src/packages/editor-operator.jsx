@@ -16,6 +16,7 @@ export default defineComponent({
   props: {
     block: { type: Object },
     data: { type: Object },
+    updateContainer: { type: Function },
     updateBlock: { type: Function },
   },
   setup(props) {
@@ -26,7 +27,7 @@ export default defineComponent({
     const reset = () => {
       if (!props.block) {
         // 说明要绑定的是容器宽高
-        // state.editData = deepcopy(props.data.container);
+        state.editData = deepcopy(props.data.container);
       } else {
         state.editData = deepcopy(props.block);
       }
@@ -34,6 +35,7 @@ export default defineComponent({
     const apply = () => {
       if (!props.block) {
         // 更改容器
+        props.updateContainer({ ...props.data, container: state.editData });
       } else {
         props.updateBlock(state.editData, props.block);
       }
@@ -46,10 +48,10 @@ export default defineComponent({
         content.push(
           <>
             <ElFormItem label="容器宽度">
-              <ElInputNumber></ElInputNumber>
+              <ElInputNumber v-model={state.editData.width}></ElInputNumber>
             </ElFormItem>
             <ElFormItem label="容器高度">
-              <ElInputNumber></ElInputNumber>
+              <ElInputNumber v-model={state.editData.height}></ElInputNumber>
             </ElFormItem>
           </>
         );
@@ -58,8 +60,6 @@ export default defineComponent({
         if (component && component.props) {
           content.push(
             Object.entries(component.props).map(([propName, propConfig]) => {
-              console.log('type = ' + propConfig.type);
-
               return (
                 <ElFormItem label={propConfig.label}>
                   {{

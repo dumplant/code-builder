@@ -7,16 +7,10 @@ export default defineComponent({
     formData: { type: Object },
   },
   setup(props) {
-    // const blockStyles = computed(() => ({
-    //   top: `${props.block.top}px`,
-    //   left:`${props.block.left}px`,
-    //   zIndex:`${props.block.zIndex}`,
-    // }))
     const config = inject('config');
 
     return () => {
       const component = config.componentMap[props.block.type];
-      console.log('component', component);
       const renderComponent = component.render({
         props: props.block.props,
         model: Object.keys(component.model || {}).reduce((prev, modelName) => {
@@ -30,9 +24,6 @@ export default defineComponent({
         }, {}),
       });
       return <div class="editor-block">{renderComponent}</div>;
-      // return <div class="editor-block" style={blockStyles.value}>
-      //   {renderComponent}
-      // </div>
     };
   },
 });

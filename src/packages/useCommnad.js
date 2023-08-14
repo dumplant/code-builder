@@ -7,8 +7,8 @@ export function useCommand(data, focusData) {
     current: -1,
     queue: [], // 存放所有操作命令
     commands: {}, // 制作命令和执行功能的一个映射表 undo, redo
-    commandArray: [],
-    destroyArray: [],
+    commandArray: [], // 存放所有的command
+    destroyArray: [], //存放需要销毁的内容
   };
   const registry = (command) => {
     state.commandArray.push(command);
@@ -68,7 +68,6 @@ export function useCommand(data, focusData) {
     name: 'drag',
     pushQueue: true,
     init() {
-      console.log('init');
       this.before = null;
 
       const start = () => (this.before = deepcopy(data.value.blocks));
@@ -103,6 +102,7 @@ export function useCommand(data, focusData) {
         before: data.value,
         after: newValue,
       };
+      console.log('data.value', data.value);
       return {
         redo: () => {
           data.value = state.after;

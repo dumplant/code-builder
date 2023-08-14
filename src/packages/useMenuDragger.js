@@ -25,7 +25,6 @@ export function useMenuDragger(containerRef, data) {
         },
       ],
     };
-    console.log(data.value);
     currentComponent = null;
   };
 

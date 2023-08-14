@@ -1,7 +1,17 @@
 import { computed, ref } from 'vue';
 export function useFocus(data, previewRef) {
+  console.log(data, 'use data');
   const selectIndex = ref(-1);
-  const lastSelectBlock = computed(() => data.value.blocks[selectIndex.value]);
+  const lastSelectBlock = computed(() => {
+    if (
+      selectIndex.value < 0 ||
+      selectIndex.value >= data.value.blocks.length
+    ) {
+      selectIndex.value = -1;
+      return null;
+    }
+    return data.value.blocks[selectIndex.value];
+  });
   const clearBlockFocus = () => {
     data.value.blocks.forEach((block) => (block.focus = false));
     selectIndex.value = -1;

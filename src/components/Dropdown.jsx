@@ -57,15 +57,20 @@ const DropdownComponent = defineComponent({
     }));
     const el = ref(null);
     const onMousedownDocument = (e) => {
+      console.log('mousedownDocument');
       if (!el.value.contains(e.target)) {
         state.isShow = false;
       }
     };
     onMounted(() => {
-      document.addEventListener('mousedown', onMousedownDocument, true);
+      console.log('mounted');
+      document.addEventListener('mousedown', onMousedownDocument, {
+        once: true,
+        capture: true,
+      });
     });
     onBeforeUnmount(() => {
-      document.addEventListener('mousedown', onMousedownDocument, true);
+      console.log('beforeUnmount');
       document.removeEventListener('mousedown');
     });
     return () => {
