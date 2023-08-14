@@ -1,7 +1,7 @@
 import deepcopy from 'deepcopy';
 import { ElButton, ElTag } from 'element-plus';
 import { defineComponent, computed } from 'vue';
-import { $tableDialog } from '@/components/TableDialog';
+import { $tableDialog } from '@/components/common/TableDialog';
 export default defineComponent({
   props: {
     propConfig: { type: Object },

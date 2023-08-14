@@ -6,9 +6,9 @@
 
 <script>
 /* eslint-disable */
-import data from './data.json';
+import data from './mock/data.json';
 import { provide, ref } from 'vue';
-import Editor from './packages/editor'
+import Editor from './components/editor/editor'
 import { registerConfig as config } from "./utils/editor-config"
 export default {
   components: {

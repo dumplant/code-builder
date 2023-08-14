@@ -11,7 +11,7 @@ import {
   ElSelect,
   ElColorPicker,
 } from 'element-plus';
-import TableEditor from './table-editor';
+import TableEditor from '@/components/common/table-editor';
 export default defineComponent({
   props: {
     block: { type: Object },

@@ -4,15 +4,15 @@ import './editor.scss';
 import EditorBlock from './editor-block';
 import EditorOperator from './editor-operator';
 import deepcopy from 'deepcopy';
-import { useMenuDragger } from './useMenuDragger';
-import { useCommand } from './useCommnad';
-import { $dialog } from '@/components/Dialog';
-import getResponse from './GetResponse';
-import { getJson } from './GetJson';
-import { useFocus } from './userFocus';
-import { userBlockDragger } from './useBlockDragger';
+import { useMenuDragger } from '@/utils/useMenuDragger';
+import { useCommand } from '@/utils/useCommnad';
+import { $dialog } from '@/components/common/Dialog';
+import getResponse from '@/utils/GetResponse';
+import { getJson } from '@/utils/GetJson';
+import { useFocus } from '@/utils/userFocus';
+import { userBlockDragger } from '@/utils/useBlockDragger';
 import { ElButton, ElNotification } from 'element-plus';
-import { $dropdown, DropdownItem } from '@/components/Dropdown';
+import { $dropdown, DropdownItem } from '@/components/common/Dropdown';
 export default defineComponent({
   components: {
     EditorBlock,
