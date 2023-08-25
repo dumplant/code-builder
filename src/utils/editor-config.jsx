@@ -5,22 +5,26 @@ import {
   ElRadio,
   ElCheckboxGroup,
   ElCheckbox,
+  ElForm,
 } from 'element-plus';
-
+// import { useFocus } from '@/utils/userFocus';
+import EditorBlock from '@/components/editor/editor-block';
+// let { blockMouseDown } = useFocus();
 function createEditorConfig() {
-  const componentList = [];
-  const componentMap = {};
+  const componentList = []; // 存储所有的组件
+  const componentMap = {}; // 存储了组件键值对
   return {
     componentList,
     componentMap,
     register: (component) => {
+      // 向componentList 中添加组件
       componentList.push(component);
+      // key: 组件的type属性，value：组件
       componentMap[component.type] = component;
     },
   };
 }
 
-export let registerConfig = createEditorConfig();
 const createInputProp = (label) => ({ type: 'input', label });
 const createColorProp = (label) => ({ type: 'color', label });
 const createSelectProp = (label, options) => ({
@@ -33,6 +37,8 @@ const createTableProp = (label, table) => ({
   label,
   table,
 });
+
+export let registerConfig = createEditorConfig();
 registerConfig.register({
   label: '文本',
   preview: () => '预览文本',
@@ -81,6 +87,38 @@ registerConfig.register({
 });
 
 registerConfig.register({
+  label: '表单容器',
+  preview: () => <el-input />,
+  render: ({ props, children }) => {
+    return (
+      <ElForm
+        style="border:1px solid #ccc; padding:0.3rem;border-radius: 5px;"
+        label-width="5rem"
+        label-position={props.position}
+      >
+        {(children || []).map((block) => {
+          return (
+            <EditorBlock
+              style="border:1px solid #ccc;"
+              block={block}
+              // onMousedown={(e) => blockMouseDown(e, block, index)}
+            ></EditorBlock>
+          );
+        })}
+      </ElForm>
+    );
+  },
+  type: 'form',
+  props: {
+    position: createSelectProp('标签位置', [
+      { label: '居左', value: 'left' },
+      { label: '居右', value: 'right' },
+      { label: '居上', value: 'top' },
+    ]),
+  },
+});
+
+registerConfig.register({
   label: '输入框',
   preview: () => (
     <el-form-item label="输入框">
@@ -111,7 +149,7 @@ registerConfig.register({
     ]),
   },
   model: {
-    default: '绑定字段',
+    default: '输入框绑定字段',
   },
 });
 
@@ -137,6 +175,7 @@ registerConfig.register({
               { label: 2, value: 'Option 2' },
             ]
           ).map((item) => {
+            console.log('item', item);
             return <ElRadio label={item.label}>{item.value}</ElRadio>;
           })}
         </ElRadioGroup>
@@ -145,7 +184,7 @@ registerConfig.register({
   },
   type: 'radio',
   model: {
-    default: '绑定字段',
+    default: '单选绑定字段',
   },
   props: {
     text: createInputProp('标签内容'),
@@ -182,7 +221,7 @@ registerConfig.register({
   },
   type: 'checkbox',
   model: {
-    default: '绑定字段',
+    default: '多选绑定字段',
   },
   props: {
     text: createInputProp('标签内容'),
@@ -225,24 +264,24 @@ registerConfig.register({
     }),
   },
   model: {
-    default: '绑定字段',
+    default: '下拉绑定字段',
   },
 });
-registerConfig.register({
-  label: '表格',
-  preview: () => (
-    <el-table>
-      <el-table-column prop="date" label="Date" width="180" />
-      <el-table-column prop="name" label="Name" width="180" />
-      <el-table-column prop="address" label="Address" />
-    </el-table>
-  ),
-  render: () => (
-    <el-table>
-      <el-table-column prop="date" label="Date" width="180" />
-      <el-table-column prop="name" label="Name" width="180" />
-      <el-table-column prop="address" label="Address" />
-    </el-table>
-  ),
-  type: 'table',
-});
+// registerConfig.register({
+//   label: '表格',
+//   preview: () => (
+//     <el-table>
+//       <el-table-column prop="date" label="Date" width="180" />
+//       <el-table-column prop="name" label="Name" width="180" />
+//       <el-table-column prop="address" label="Address" />
+//     </el-table>
+//   ),
+//   render: () => (
+//     <el-table>
+//       <el-table-column prop="date" label="Date" width="180" />
+//       <el-table-column prop="name" label="Name" width="180" />
+//       <el-table-column prop="address" label="Address" />
+//     </el-table>
+//   ),
+//   type: 'table',
+// });
