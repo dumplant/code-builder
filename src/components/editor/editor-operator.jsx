@@ -31,6 +31,7 @@ export default defineComponent({
       } else {
         state.editData = deepcopy(props.block);
       }
+      console.log('state.editData', state.editData);
     };
     const apply = () => {
       if (!props.block) {
@@ -60,6 +61,7 @@ export default defineComponent({
         if (component && component.props) {
           content.push(
             Object.entries(component.props).map(([propName, propConfig]) => {
+              console.log(propName, propConfig);
               return (
                 <ElFormItem label={propConfig.label}>
                   {{
@@ -96,6 +98,7 @@ export default defineComponent({
         if (component && component.model) {
           content.push(
             Object.entries(component.model).map(([modelName, label]) => {
+              console.log(modelName, label);
               return (
                 <ElFormItem label={label}>
                   <ElInput v-model={state.editData.model[modelName]}></ElInput>

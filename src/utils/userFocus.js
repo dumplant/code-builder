@@ -13,13 +13,18 @@ export function useFocus(data, previewRef) {
     return data.value.blocks[selectIndex.value];
   });
   const clearBlockFocus = () => {
-    data.value.blocks.forEach((block) => (block.focus = false));
+    data.value.blocks.forEach((block) => {
+      if (block.focus) block.focus = false;
+    });
     selectIndex.value = -1;
   };
   const blockMouseDown = (e, block, index) => {
     if (previewRef.value) {
       return;
     }
+    console.log('e.currentTarget', e.currentTarget);
+    console.log('block', block);
+
     e.preventDefault();
     e.stopPropagation();
     // block上规划一个属性 focus， 获取焦点还将focus变为true
@@ -34,7 +39,7 @@ export function useFocus(data, previewRef) {
       }
     }
     selectIndex.value = index;
-    console.log(lastSelectBlock);
+    console.log('lastSelcetBlock', lastSelectBlock);
   };
 
   const focusData = computed(() => {

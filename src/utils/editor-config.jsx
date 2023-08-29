@@ -9,6 +9,7 @@ import {
 } from 'element-plus';
 // import { useFocus } from '@/utils/userFocus';
 import EditorBlock from '@/components/editor/editor-block';
+// import Range from '@/components/render/Range';
 // let { blockMouseDown } = useFocus();
 function createEditorConfig() {
   const componentList = []; // 存储所有的组件
@@ -143,7 +144,7 @@ registerConfig.register({
   props: {
     text: createInputProp('标签内容'),
     size: createSelectProp('输入框尺寸', [
-      { label: '大', value: 'big' },
+      { label: '大', value: 'large' },
       { label: '中', value: 'medium' },
       { label: '小', value: 'small' },
     ]),
@@ -267,6 +268,19 @@ registerConfig.register({
     default: '下拉绑定字段',
   },
 });
+// registerConfig.register({
+//   label: '范围选择器',
+//   preview: () => <Range></Range>,
+//   render: ({ model }) => <Range {...{
+//     start: model.start.modelValue,
+//     'onUpdate:start'
+//   }}></Range>,
+//   model: {
+//     start: '开始字段',
+//     end: '结束字段',
+//   },
+//   type: 'range',
+// });
 // registerConfig.register({
 //   label: '表格',
 //   preview: () => (

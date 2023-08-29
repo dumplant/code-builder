@@ -50,7 +50,7 @@ const TableComponent = defineComponent({
               <div>
                 <div style={{ textAlign: 'end' }}>
                   <ElButton onClick={add}>添加</ElButton>
-                  <ElButton>重置</ElButton>
+                  {/* <ElButton>重置</ElButton> */}
                 </div>
                 <ElTable data={state.editDate}>
                   <ElTableColumn type="index"></ElTableColumn>

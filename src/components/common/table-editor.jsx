@@ -7,7 +7,7 @@ export default defineComponent({
     propConfig: { type: Object },
     modelValue: { type: Array },
   },
-  emits: ['updata:modelValue'],
+  emits: ['update:modelValue'],
   setup(props, ctx) {
     const data = computed({
       get() {

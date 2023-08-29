@@ -8,9 +8,9 @@ export default defineComponent({
   },
   setup(props) {
     const config = inject('config');
-
-    return () => {
-      const component = config.componentMap[props.block.type];
+    console.log('in editor-block', props.block);
+    function render(type) {
+      const component = config.componentMap[type];
       const renderComponent = component.render({
         props: props.block.props,
         model: Object.keys(component.model || {}).reduce((prev, modelName) => {
@@ -22,7 +22,12 @@ export default defineComponent({
           };
           return prev;
         }, {}),
+        children: props.block.children,
       });
+      return renderComponent;
+    }
+    return () => {
+      const renderComponent = render(props.block.type);
       return <div class="editor-block">{renderComponent}</div>;
     };
   },

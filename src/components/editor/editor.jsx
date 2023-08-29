@@ -11,7 +11,7 @@ import getResponse from '@/utils/GetResponse';
 import { getJson } from '@/utils/GetJson';
 import { useFocus } from '@/utils/userFocus';
 import { userBlockDragger } from '@/utils/useBlockDragger';
-import { ElButton, ElNotification } from 'element-plus';
+import { ElButton, ElNotification, ElDrawer } from 'element-plus';
 import { $dropdown, DropdownItem } from '@/components/common/Dropdown';
 export default defineComponent({
   components: {
@@ -52,7 +52,7 @@ export default defineComponent({
       useFocus(data, previewRef);
     const { commands } = useCommand(data, focusData);
     console.log(lastSelectBlock);
-
+    const formData = inject('formData');
     const buttons = [
       { label: '撤销', handler: () => commands.undo() },
       { label: '重做', handler: () => commands.redo() },
@@ -101,6 +101,7 @@ export default defineComponent({
             async onConfirm(text) {
               console.log(text);
               try {
+                loading.value = true;
                 let res = await getResponse(JSON.stringify(data.value), text);
                 let generateJson = getJson(res);
                 commands.updateContainer(JSON.parse(generateJson));
@@ -112,6 +113,8 @@ export default defineComponent({
                     type: 'error',
                   });
                 })();
+              } finally {
+                loading.value = false;
               }
             },
           });
@@ -132,6 +135,12 @@ export default defineComponent({
           clearBlockFocus();
         },
       },
+      // {
+      //   label: 'JSON',
+      //   handler: () => {
+      //     drawer.value = true;
+      //   },
+      // },
     ];
 
     const onContextMenuBlock = (e, block, index) => {
@@ -156,14 +165,16 @@ export default defineComponent({
         ),
       });
     };
-
+    const loading = ref(false);
+    console.log('formData', formData.value);
     return () =>
       !editorRef.value ? (
         <>
-          <div style={'float:right'}>
+          <div style={'float:right;margin-right:1rem;'}>
             <ElButton type="primary" onClick={() => (editorRef.value = true)}>
               返回编辑
             </ElButton>
+            <div class="model">{JSON.stringify(formData.value)}</div>
           </div>
           <div
             class="editor-container-canvas__content"
@@ -173,7 +184,7 @@ export default defineComponent({
               <EditorBlock
                 class={'editor-block-preview'}
                 block={block}
-                formData={props.formData}
+                // formData={props.formData}
               ></EditorBlock>
             ))}
           </div>
@@ -193,32 +204,26 @@ export default defineComponent({
               </div>
             ))}
           </div>
-          <div class="editor-top">
-            {buttons.map((btn, index) => {
-              const label =
-                typeof btn.label == 'function' ? btn.label() : btn.label;
-              return (
-                <div class="editor-top-button" onClick={btn.handler}>
-                  <el-button>{label}</el-button>
-                </div>
-              );
-            })}
-          </div>
-          <div class="editor-right">
-            <EditorOperator
-              block={lastSelectBlock.value}
-              data={data.value}
-              updateContainer={commands.updateContainer}
-              updateBlock={commands.updateBlock}
-            ></EditorOperator>
-          </div>
+
           <div class="editor-container">
+            <div class="editor-top">
+              {buttons.map((btn, index) => {
+                const label =
+                  typeof btn.label == 'function' ? btn.label() : btn.label;
+                return (
+                  <div class="editor-top-button" onClick={btn.handler}>
+                    <el-button>{label}</el-button>
+                  </div>
+                );
+              })}
+            </div>
             <div class="editor-container-canvas">
               <div
                 class="editor-container-canvas__content"
                 style={containerStyles.value}
                 ref={containerRef}
-                onMousedown={() => clearBlockFocus()}
+                onMousedown={(e) => clearBlockFocus(e)}
+                v-loading={loading.value}
               >
                 {data.value.blocks.map((block, index) => (
                   <EditorBlock
@@ -230,13 +235,21 @@ export default defineComponent({
                         : ''
                     }
                     block={block}
-                    formData={props.formData}
+                    // formData={props.formData}
                     onMousedown={(e) => blockMouseDown(e, block, index)}
                     onContextmenu={(e) => onContextMenuBlock(e, block, index)}
                   ></EditorBlock>
                 ))}
               </div>
             </div>
+          </div>
+          <div class="editor-right">
+            <EditorOperator
+              block={lastSelectBlock.value}
+              data={data.value}
+              updateContainer={commands.updateContainer}
+              updateBlock={commands.updateBlock}
+            ></EditorOperator>
           </div>
         </div>
       );

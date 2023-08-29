@@ -3,20 +3,24 @@ body {
 }
 
 .editor {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: space-between;
 
   &-left,
   &-right {
-    position: absolute;
-    width: 270px;
-    background-color: antiquewhite;
-    top: 0;
-    bottom: 0;
+    // position: absolute;
+    width: 300px;
+    background-color: #fff;
+    overflow-y: scroll;
+    // top: 0;
+    // bottom: 0;
   }
 
   &-left {
-    left: 0;
+    // left: 0;
+
 
     &-item {
       width: 250px;
@@ -26,24 +30,30 @@ body {
       align-items: center;
       background-color: white;
       padding: 20px;
+      padding-top: 2rem;
       box-sizing: border-box;
       cursor: move;
       user-select: none;
       min-height: 100px;
       position: relative;
+      border-radius: 0.1rem;
+      border: #b0b5bd 1px solid;
 
       >span {
+        border-radius: 0.1rem;
         position: absolute;
         top: 0;
         left: 0;
-        background-color: skyblue;
+        right: 0;
+        text-align: center;
+        background-color: #b0b5bd;
         color: white;
       }
 
       &::after {
         content: '';
         position: absolute;
-        background-color: rgba($color: #ccc, $alpha: 0.2);
+        background-color: rgba($color: #e4e4e4, $alpha: 0.1);
         top: 0;
         left: 0;
         right: 0;
@@ -54,13 +64,14 @@ body {
   }
 
   &-right {
-    right: 0;
+    // right: 0;
   }
 
   &-top {
-    position: absolute;
-    right: 280px;
-    left: 280px;
+    // position: absolute;
+    // bottom: 1px;
+    // right: 1px;
+    // left: 280px;
     height: 80px;
     background-color: e7e7e7;
     display: flex;
@@ -78,13 +89,18 @@ body {
   }
 
   &-container {
+    flex: 1;
     box-sizing: border-box;
-    padding: 80px 270px 0;
+    // padding: 80px 270px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     height: 100vh;
     background-color: #e7e7e7;
+    overflow: scroll;
 
     &-canvas {
-      overflow: scroll;
+
       height: 100%;
 
       &__content {
@@ -100,16 +116,16 @@ body {
     // position: absolute;
     position: relative;
 
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      // z-index: 9999;
-      // background-color: #ccc;
-    }
+    // &::after {
+    //   content: '';
+    //   position: absolute;
+    //   top: 0;
+    //   left: 0;
+    //   right: 0;
+    //   bottom: 0;
+    //   // z-index: 9999;
+    //   // background-color: #ccc;
+    // }
 
 
   }
@@ -147,4 +163,10 @@ body {
   border-bottom: #ccc solid 1px;
   cursor: pointer;
   user-select: none;
+}
+
+.model {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
 }

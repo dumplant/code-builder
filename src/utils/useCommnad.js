@@ -5,10 +5,11 @@ import { events } from './events';
 export function useCommand(data, focusData) {
   const state = {
     current: -1,
-    queue: [], // 存放所有操作命令
+    records: [], // 存放所有操作命令
     commands: {}, // 制作命令和执行功能的一个映射表 undo, redo
     commandArray: [], // 存放所有的command
     destroyArray: [], //存放需要销毁的内容
+    maxLimit: 20,
   };
   const registry = (command) => {
     state.commandArray.push(command);
@@ -16,19 +17,24 @@ export function useCommand(data, focusData) {
       // 命令名字对应执行函数
       const { redo, undo } = command.execute(...args);
       redo();
-      if (!command.pushQueue) {
+      if (!command.pushRecords) {
         return;
       }
-      let { queue, current } = state;
+      let { records, current } = state;
 
-      if (queue.length > 0) {
-        queue = queue.slice(0, current + 1);
-        state.queue = queue;
+      if (records.length > 0) {
+        records = records.slice(0, current + 1);
+        state.records = records;
       }
 
-      queue.push({ redo, undo });
-      state.current = current + 1;
-      console.log(queue);
+      records.push({ redo, undo });
+
+      if (records.length >= state.maxLimit) {
+        records.shift();
+      } else {
+        state.current = current + 1;
+      }
+      console.log('records', records);
     };
   };
   registry({
@@ -37,7 +43,7 @@ export function useCommand(data, focusData) {
     execute() {
       return {
         redo() {
-          let item = state.queue[state.current + 1];
+          let item = state.records[state.current + 1];
           if (item) {
             item.redo && item.redo();
             state.current++;
@@ -55,7 +61,7 @@ export function useCommand(data, focusData) {
           if (state.current == -1) {
             return;
           }
-          let item = state.queue[state.current];
+          let item = state.records[state.current];
           if (item) {
             item.undo && item.undo();
             state.current--;
@@ -66,7 +72,7 @@ export function useCommand(data, focusData) {
   });
   registry({
     name: 'drag',
-    pushQueue: true,
+    pushRecords: true,
     init() {
       this.before = null;
 
@@ -96,7 +102,7 @@ export function useCommand(data, focusData) {
   });
   registry({
     name: 'updateContainer',
-    pushQueue: true,
+    pushRecords: true,
     execute(newValue) {
       let state = {
         before: data.value,
@@ -116,14 +122,11 @@ export function useCommand(data, focusData) {
   registry({
     // 更新某一个组件
     name: 'updateBlock',
-    pushQueue: true,
+    pushRecords: true,
     execute(newBlock, oldBlock) {
       let state = {
         before: data.value.blocks,
         after: (() => {
-          console.log('newBlock' + newBlock);
-
-          console.log('oldBlock' + oldBlock);
           let blocks = [...data.value.blocks]; // 拷贝一份用于新block
           const index = data.value.blocks.indexOf(oldBlock); // 找到老的位置
           if (index > -1) blocks.splice(index, 1, newBlock);
@@ -143,7 +146,7 @@ export function useCommand(data, focusData) {
   registry({
     // 上移某一个组件
     name: 'up',
-    pushQueue: true,
+    pushRecords: true,
     execute(newBlock) {
       let state = {
         before: data.value.blocks,
@@ -173,7 +176,7 @@ export function useCommand(data, focusData) {
   registry({
     // 下移某一个组件
     name: 'down',
-    pushQueue: true,
+    pushRecords: true,
     execute(newBlock) {
       let state = {
         before: data.value.blocks,
@@ -202,7 +205,7 @@ export function useCommand(data, focusData) {
   });
   registry({
     name: 'delete',
-    pushQueue: true, // 是否可以加入命令队列
+    pushRecords: true, // 是否可以加入命令队列
     execute() {
       let state = {
         before: deepcopy(data.value.blocks),

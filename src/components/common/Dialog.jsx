@@ -35,6 +35,7 @@ const DialogComponent = defineComponent({
                 rows={10}
               ></ElInput>
             ),
+            // json: () => <vueJsonEditor v-model={state.option.content} />,
             footer: () =>
               state.option.footer && (
                 <div>
